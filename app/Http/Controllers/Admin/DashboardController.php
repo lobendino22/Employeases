@@ -26,11 +26,11 @@ class DashboardController extends Controller
             ->get();
 
         $applicationsPerMonth = Application::select(
-            DB::raw("strftime('%m', created_at) as month"),
-            DB::raw("strftime('%Y', created_at) as year"),
+            DB::raw("DATE_FORMAT(created_at, '%m') as month"),
+            DB::raw("DATE_FORMAT(created_at, '%Y') as year"),
             DB::raw('COUNT(*) as total')
         )
-            ->whereRaw("strftime('%Y', created_at) = ?", [Carbon::now()->year])
+            ->whereRaw("DATE_FORMAT(created_at, '%Y') = ?", [Carbon::now()->year])
             ->groupBy('year', 'month')
             ->orderBy('month')
             ->get()
@@ -72,11 +72,11 @@ class DashboardController extends Controller
     public function getChartData()
     {
         $applicationsPerMonth = Application::select(
-            DB::raw("strftime('%m', created_at) as month"),
-            DB::raw("strftime('%Y', created_at) as year"),
+            DB::raw("DATE_FORMAT(created_at, '%m') as month"),
+            DB::raw("DATE_FORMAT(created_at, '%Y') as year"),
             DB::raw('COUNT(*) as total')
         )
-            ->whereRaw("strftime('%Y', created_at) = ?", [Carbon::now()->year])
+            ->whereRaw("DATE_FORMAT(created_at, '%Y') = ?", [Carbon::now()->year])
             ->groupBy('year', 'month')
             ->orderBy('month')
             ->get()

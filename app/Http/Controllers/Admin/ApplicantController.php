@@ -53,6 +53,11 @@ class ApplicantController extends Controller
             'reviewed_at' => now(),
         ]);
 
+        // Decrement slots_available when application is accepted
+        if ($request->status === 'accepted') {
+            $application->jobVacancy->decrement('slots_available');
+        }
+
         // Create notification for the job seeker
         $application->user->notifications()->create([
             'type' => 'application_status',

@@ -7,167 +7,188 @@
 @endsection
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h4 class="mb-1 fw-bold">Dashboard</h4>
-        <p class="text-muted mb-0">Welcome back, {{ auth()->user()->name }}!</p>
+<div class="container-fluid px-0">
+    <!-- Header -->
+    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center mb-4 gap-3">
+        <div>
+            <h4 class="mb-1 fw-bold">Dashboard</h4>
+            <p class="text-muted mb-0">Welcome back, {{ auth()->user()->name }}!</p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <span class="badge bg-light text-dark p-2 fw-medium">
+                <i class="bi bi-calendar3 me-1"></i> {{ now()->format('F d, Y') }}
+            </span>
+            <span class="badge bg-primary-subtle text-primary-emphasis p-2 fw-medium">
+                <i class="bi bi-clock me-1"></i> {{ now()->format('g:i A') }}
+            </span>
+        </div>
     </div>
-    <div>
-        <span class="badge bg-light text-dark p-2">
-            <i class="bi bi-calendar3 me-1"></i> {{ now()->format('F d, Y') }}
-        </span>
-    </div>
-</div>
-
-<!-- Statistics Cards -->
+<!-- Primary Statistics Cards -->
 <div class="row g-3 mb-4">
-    <div class="col-xl-3 col-md-6">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <p class="text-muted mb-1 small">Total Vacancies</p>
-                        <h3 class="fw-bold mb-0">{{ $totalVacancies }}</h3>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card border-0 shadow-sm h-100 stat-card">
+            <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="flex-grow-1">
+                        <p class="text-muted mb-1 stat-label small fw-medium">Total Vacancies</p>
+                        <h4 class="fw-bold mb-0 text-primary">{{ $totalVacancies }}</h4>
                     </div>
-                    <div class="stat-icon bg-primary-subtle text-primary rounded-3 p-2">
-                        <i class="bi bi-briefcase fs-4"></i>
+                    <div class="stat-icon bg-primary-subtle text-primary rounded-3 p-2 flex-shrink-0">
+                        <i class="bi bi-briefcase fs-5"></i>
                     </div>
                 </div>
-                <small class="text-muted">All posted job vacancies</small>
+                <small class="text-muted stat-desc">All posted job vacancies</small>
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-md-6">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <p class="text-muted mb-1 small">Total Applicants</p>
-                        <h3 class="fw-bold mb-0">{{ $totalApplicants }}</h3>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card border-0 shadow-sm h-100 stat-card">
+            <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="flex-grow-1">
+                        <p class="text-muted mb-1 stat-label small fw-medium">Total Applicants</p>
+                        <h4 class="fw-bold mb-0 text-info">{{ $totalApplicants }}</h4>
                     </div>
-                    <div class="stat-icon bg-primary-subtle text-primary rounded-3 p-2">
-                        <i class="bi bi-people fs-4"></i>
+                    <div class="stat-icon bg-info-subtle text-info rounded-3 p-2 flex-shrink-0">
+                        <i class="bi bi-people fs-5"></i>
                     </div>
                 </div>
-                <small class="text-muted">All submitted applications</small>
+                <small class="text-muted stat-desc">All submitted applications</small>
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-md-6">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <p class="text-muted mb-1 small">Active Jobs</p>
-                        <h3 class="fw-bold mb-0 text-success">{{ $activeJobs }}</h3>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card border-0 shadow-sm h-100 stat-card">
+            <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="flex-grow-1">
+                        <p class="text-muted mb-1 stat-label small fw-medium">Active Jobs</p>
+                        <h4 class="fw-bold mb-0 text-success">{{ $activeJobs }}</h4>
                     </div>
-                    <div class="stat-icon bg-success-subtle text-success rounded-3 p-2">
-                        <i class="bi bi-check-circle fs-4"></i>
+                    <div class="stat-icon bg-success-subtle text-success rounded-3 p-2 flex-shrink-0">
+                        <i class="bi bi-check-circle fs-5"></i>
                     </div>
                 </div>
-                <small class="text-muted">Currently accepting applicants</small>
+                <small class="text-muted stat-desc">Currently accepting applicants</small>
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-md-6">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <p class="text-muted mb-1 small">Closed Jobs</p>
-                        <h3 class="fw-bold mb-0 text-danger">{{ $closedJobs }}</h3>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card border-0 shadow-sm h-100 stat-card">
+            <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="flex-grow-1">
+                        <p class="text-muted mb-1 stat-label small fw-medium">Closed Jobs</p>
+                        <h4 class="fw-bold mb-0 text-danger">{{ $closedJobs }}</h4>
                     </div>
-                    <div class="stat-icon bg-danger-subtle text-danger rounded-3 p-2">
-                        <i class="bi bi-x-circle fs-4"></i>
-                    </div>
-                </div>
-                <small class="text-muted">No longer accepting applicants</small>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Secondary Stats -->
-<div class="row g-3 mb-4">
-    <div class="col-xl-3 col-md-6">
-        <div class="card border-0 shadow-sm bg-brand-navy-deep">
-            <div class="card-body">
-                <div class="d-flex align-items-center gap-3">
-                    <i class="bi bi-people-fill fs-1 opacity-75"></i>
-                    <div>
-                        <h3 class="fw-bold mb-0">{{ $totalJobSeekers }}</h3>
-                        <small>Registered Job Seekers</small>
+                    <div class="stat-icon bg-danger-subtle text-danger rounded-3 p-2 flex-shrink-0">
+                        <i class="bi bi-x-circle fs-5"></i>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-md-6">
-        <div class="card border-0 shadow-sm bg-brand-gold">
-            <div class="card-body">
-                <div class="d-flex align-items-center gap-3">
-                    <i class="bi bi-clock-fill fs-1 opacity-75"></i>
-                    <div>
-                        <h3 class="fw-bold mb-0">{{ $pendingApplications }}</h3>
-                        <small>Pending Applications</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-md-6">
-        <div class="card border-0 shadow-sm bg-brand-teal">
-            <div class="card-body">
-                <div class="d-flex align-items-center gap-3">
-                    <i class="bi bi-calendar-check-fill fs-1 opacity-75"></i>
-                    <div>
-                        <h3 class="fw-bold mb-0">{{ $interviewsScheduled }}</h3>
-                        <small>Upcoming Interviews</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-md-6">
-        <div class="card border-0 shadow-sm bg-brand-navy">
-            <div class="card-body">
-                <div class="d-flex align-items-center gap-3">
-                    <i class="bi bi-bar-chart-fill fs-1 opacity-75"></i>
-                    <div>
-                        <h3 class="fw-bold mb-0">{{ $totalApplicants > 0 ? round(($totalApplicants / max($totalVacancies, 1)) * 100) : 0 }}%</h3>
-                        <small>Application Rate</small>
-                    </div>
-                </div>
+                <small class="text-muted stat-desc">No longer accepting applicants</small>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Charts -->
+<!-- Secondary Statistics Cards -->
 <div class="row g-3 mb-4">
-    <div class="col-xl-8">
-        <div class="card border-0 shadow-sm">
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card border-0 shadow-sm bg-brand-navy-deep text-white h-100 stat-card-colored">
+            <div class="card-body p-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="stat-icon-large bg-white bg-opacity-10 rounded-3 p-2 flex-shrink-0">
+                        <i class="bi bi-people-fill fs-4 text-white opacity-75"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h4 class="fw-bold mb-1 text-white">{{ $totalJobSeekers }}</h4>
+                        <p class="mb-0 small text-white-50">Registered Job Seekers</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card border-0 shadow-sm bg-brand-gold text-dark h-100 stat-card-colored">
+            <div class="card-body p-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="stat-icon-large bg-white bg-opacity-20 rounded-3 p-2 flex-shrink-0">
+                        <i class="bi bi-clock-fill fs-4 text-dark opacity-75"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h4 class="fw-bold mb-1">{{ $pendingApplications }}</h4>
+                        <p class="mb-0 small opacity-75">Pending Applications</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card border-0 shadow-sm bg-brand-teal text-white h-100 stat-card-colored">
+            <div class="card-body p-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="stat-icon-large bg-white bg-opacity-10 rounded-3 p-2 flex-shrink-0">
+                        <i class="bi bi-calendar-check-fill fs-4 text-white opacity-75"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h4 class="fw-bold mb-1 text-white">{{ $interviewsScheduled }}</h4>
+                        <p class="mb-0 small text-white-50">Upcoming Interviews</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card border-0 shadow-sm bg-brand-navy text-white h-100 stat-card-colored">
+            <div class="card-body p-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="stat-icon-large bg-white bg-opacity-10 rounded-3 p-2 flex-shrink-0">
+                        <i class="bi bi-bar-chart-fill fs-4 text-white opacity-75"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h4 class="fw-bold mb-1 text-white">{{ $totalApplicants > 0 ? round(($totalApplicants / max($totalVacancies, 1)) * 100) : 0 }}%</h4>
+                        <p class="mb-0 small text-white-50">Application Rate</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Section -->
+<div class="row g-4 mb-4">
+    <div class="col-xl-8 col-lg-7">
+        <div class="card border-0 shadow-sm h-100">
             <div class="card-header bg-white py-3 border-bottom">
-                <h5 class="card-title mb-0 fw-semibold">
-                    <i class="bi bi-bar-chart-line me-2 text-primary"></i>Applications per Month ({{ date('Y') }})
-                </h5>
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
+                    <h5 class="card-title mb-0 fw-semibold">
+                        <i class="bi bi-bar-chart-line me-2 text-primary"></i>Applications per Month ({{ date('Y') }})
+                    </h5>
+                    <span class="badge bg-primary-subtle text-primary-emphasis small">
+                        Total: {{ $totalApplicants }} applications
+                    </span>
+                </div>
             </div>
-            <div class="card-body">
+            <div class="card-body p-3">
                 <div class="skeleton-chart" aria-hidden="true"></div>
-                <canvas id="applicationsChart" height="300"></canvas>
+                <div class="chart-container" style="position: relative; height: 300px;">
+                    <canvas id="applicationsChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-xl-4">
-        <div class="card border-0 shadow-sm">
+    <div class="col-xl-4 col-lg-5">
+        <div class="card border-0 shadow-sm h-100">
             <div class="card-header bg-white py-3 border-bottom">
                 <h5 class="card-title mb-0 fw-semibold">
                     <i class="bi bi-pie-chart me-2 text-primary"></i>Jobs by Category
                 </h5>
             </div>
-            <div class="card-body">
+            <div class="card-body p-3">
                 <div class="skeleton-chart" aria-hidden="true"></div>
-                <canvas id="categoryChart" height="300"></canvas>
+                <div class="chart-container" style="position: relative; height: 300px;">
+                    <canvas id="categoryChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -177,53 +198,124 @@
 <div class="row">
     <div class="col-12">
         <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0 fw-semibold">
-                    <i class="bi bi-clock-history me-2 text-primary"></i>Recent Applications
-                </h5>
-                <a href="{{ route('admin.applicants.index') }}" class="btn btn-sm btn-primary">View All</a>
+            <div class="card-header bg-white py-3 border-bottom">
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
+                    <h5 class="card-title mb-0 fw-semibold">
+                        <i class="bi bi-clock-history me-2 text-primary"></i>Recent Applications
+                    </h5>
+                    <div class="d-flex gap-2">
+                        <span class="badge bg-info-subtle text-info-emphasis small">
+                            {{ $recentApplications->count() }} recent
+                        </span>
+                        <a href="{{ route('admin.applicants.index') }}" class="btn btn-sm btn-primary">
+                            <i class="bi bi-eye me-1"></i>
+                            <span class="d-none d-sm-inline">View </span>All
+                        </a>
+                    </div>
+                </div>
             </div>
             <div class="card-body p-0">
                 @if($recentApplications->count() > 0)
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Applicant</th>
-                                    <th>Position</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($recentApplications as $app)
+                    <!-- Desktop Table View -->
+                    <div class="d-none d-md-block">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
                                     <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center gap-2">
-                                                <div class="avatar bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center" style="width:35px;height:35px;font-size:13px">
-                                                    {{ strtoupper(substr($app->user->name, 0, 1)) }}
-                                                </div>
-                                                <div>
-                                                    <p class="mb-0 fw-medium">{{ $app->user->name }}</p>
-                                                    <small class="text-muted">{{ $app->user->email }}</small>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>{{ $app->jobVacancy->title }}</td>
-                                        <td>{{ $app->created_at->format('M d, Y') }}</td>
-                                        <td>
-                                            <x-status-badge :status="$app->status" :label="$app->status_label" />
-                                        </td>
+                                        <th class="border-0 fw-semibold ps-3">Applicant</th>
+                                        <th class="border-0 fw-semibold">Position</th>
+                                        <th class="border-0 fw-semibold">Date</th>
+                                        <th class="border-0 fw-semibold">Status</th>
+                                        <th class="border-0 fw-semibold pe-3">Actions</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach($recentApplications as $app)
+                                        <tr class="border-bottom border-opacity-50">
+                                            <td class="ps-3 py-3">
+                                                <div class="d-flex align-items-center gap-3">
+                                                    <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:40px;height:40px;font-size:14px">
+                                                        {{ strtoupper(substr($app->user->name, 0, 1)) }}
+                                                    </div>
+                                                    <div class="min-w-0">
+                                                        <p class="mb-0 fw-medium text-truncate">{{ $app->user->name }}</p>
+                                                        <small class="text-muted text-truncate d-block">{{ $app->user->email }}</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="py-3">
+                                                <a href="{{ route('admin.job-vacancies.show', $app->jobVacancy) }}" class="text-decoration-none fw-medium">
+                                                    {{ Str::limit($app->jobVacancy->title, 25) }}
+                                                </a>
+                                            </td>
+                                            <td class="py-3">
+                                                <span class="text-muted small">{{ $app->created_at->format('M d, Y') }}</span>
+                                                <br>
+                                                <small class="text-muted">{{ $app->created_at->format('h:i A') }}</small>
+                                            </td>
+                                            <td class="py-3">
+                                                <x-status-badge :status="$app->status" :label="$app->status_label" />
+                                            </td>
+                                            <td class="pe-3 py-3">
+                                                <a href="{{ route('admin.applicants.show', $app) }}" class="btn btn-sm btn-outline-primary" title="View Application">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Card View -->
+                    <div class="d-md-none">
+                        @foreach($recentApplications as $app)
+                            <div class="border-bottom p-3">
+                                <div class="d-flex align-items-start gap-3 mb-3">
+                                    <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:48px;height:48px;font-size:16px">
+                                        {{ strtoupper(substr($app->user->name, 0, 1)) }}
+                                    </div>
+                                    <div class="flex-grow-1 min-w-0">
+                                        <h6 class="mb-1 fw-semibold text-truncate">{{ $app->user->name }}</h6>
+                                        <p class="mb-2 text-muted small text-truncate">{{ $app->user->email }}</p>
+                                        <div class="mb-2">
+                                            <x-status-badge :status="$app->status" :label="$app->status_label" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="row g-2">
+                                        <div class="col-8">
+                                            <span class="text-muted d-block small">Position Applied</span>
+                                            <a href="{{ route('admin.job-vacancies.show', $app->jobVacancy) }}" class="text-decoration-none fw-medium small">
+                                                {{ $app->jobVacancy->title }}
+                                            </a>
+                                        </div>
+                                        <div class="col-4 text-end">
+                                            <span class="text-muted d-block small">Date</span>
+                                            <span class="small">{{ $app->created_at->format('M d') }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <a href="{{ route('admin.applicants.show', $app) }}" class="btn btn-sm btn-outline-primary w-100">
+                                        <i class="bi bi-eye me-1"></i>
+                                        View Application
+                                    </a>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
                 @else
-                    <x-empty-state
-                        icon="bi-inbox"
-                        title="No applications yet"
-                        text="Applications submitted by job seekers will appear here." />
+                    <div class="p-5">
+                        <x-empty-state
+                            icon="bi-inbox"
+                            title="No applications yet"
+                            text="Applications submitted by job seekers will appear here." />
+                    </div>
                 @endif
             </div>
         </div>

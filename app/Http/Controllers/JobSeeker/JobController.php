@@ -15,7 +15,7 @@ class JobController extends Controller
             ->available()
             ->where(function ($q) {
                 $q->whereNull('application_deadline')
-                  ->orWhere('application_deadline', '>=', now());
+                  ->orWhereDate('application_deadline', '>=', today());
             });
 
         if ($request->filled('search')) {
@@ -43,7 +43,7 @@ class JobController extends Controller
 
     public function show(JobVacancy $jobVacancy)
     {
-        if (!$jobVacancy->is_active || !$jobVacancy->is_open) {
+        if ($jobVacancy->trashed() || !$jobVacancy->is_active || !$jobVacancy->is_open) {
             return redirect()->route('jobseeker.jobs.index')
                 ->with('error', 'This job vacancy is no longer available.');
         }

@@ -22,6 +22,7 @@
         'inactive'             => ['var(--ds-red-bg)',    'var(--ds-red-fg)',    'bi-x-circle'],
         'open'                 => ['var(--ds-green-bg)',  'var(--ds-green-fg)',  'bi-unlock'],
         'closed'               => ['var(--ds-red-bg)',    'var(--ds-red-fg)',    'bi-lock'],
+        'archived'             => ['var(--ds-slate-bg)',  'var(--ds-slate-fg)',  'bi-archive'],
     ];
 
     $key = strtolower(trim((string) $status));

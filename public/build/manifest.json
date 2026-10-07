@@ -12,7 +12,7 @@
     "src": "node_modules/pdfjs-dist/build/pdf.worker.min.mjs"
   },
   "resources/css/app.css": {
-    "file": "assets/app-BrbGqX5u.css",
+    "file": "assets/app-BXIAASTM.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -20,8 +20,17 @@
       "app.css"
     ]
   },
+  "resources/css/responsive.css": {
+    "file": "assets/responsive-CnumfFDR.css",
+    "src": "resources/css/responsive.css",
+    "isEntry": true,
+    "name": "responsive",
+    "names": [
+      "responsive.css"
+    ]
+  },
   "resources/js/app.js": {
-    "file": "assets/app-7kJEddN0.js",
+    "file": "assets/app-CTmhMyHJ.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true

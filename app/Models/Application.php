@@ -35,7 +35,8 @@ class Application extends Model
 
     public function jobVacancy(): BelongsTo
     {
-        return $this->belongsTo(JobVacancy::class);
+        // Archived vacancies stay attached to past applications so their details remain visible.
+        return $this->belongsTo(JobVacancy::class)->withTrashed();
     }
 
     public function interview(): HasOne

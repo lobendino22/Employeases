@@ -21,7 +21,7 @@ Route::get('/', function () {
         ->available()
         ->where(function ($q) {
             $q->whereNull('application_deadline')
-              ->orWhere('application_deadline', '>=', now());
+              ->orWhereDate('application_deadline', '>=', today());
         })
         ->latest()
         ->take(6)
@@ -38,8 +38,11 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/chart-data', [AdminDashboardController::class, 'getChartData'])->name('dashboard.chart-data');
 
-    // Job Vacancies
-    Route::resource('job-vacancies', AdminJobVacancyController::class);
+    // Job Vacancies (archived must be declared before the resource route)
+    Route::get('job-vacancies/archived', [AdminJobVacancyController::class, 'archived'])->name('job-vacancies.archived');
+    Route::post('job-vacancies/{id}/restore', [AdminJobVacancyController::class, 'restore'])->name('job-vacancies.restore');
+    Route::delete('job-vacancies/{id}/force-delete', [AdminJobVacancyController::class, 'forceDelete'])->name('job-vacancies.force-delete');
+    Route::resource('job-vacancies', AdminJobVacancyController::class)->withTrashed(['show']);
     Route::post('job-vacancies/{jobVacancy}/toggle-status', [AdminJobVacancyController::class, 'toggleStatus'])->name('job-vacancies.toggle-status');
     Route::post('job-vacancies/{jobVacancy}/toggle-active', [AdminJobVacancyController::class, 'toggleActive'])->name('job-vacancies.toggle-active');
 
@@ -88,7 +91,7 @@ Route::middleware(['auth', 'verified', 'role:job_seeker'])->prefix('jobseeker')-
     // Jobs
     Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
     Route::get('/jobs/saved', [JobController::class, 'saved'])->name('jobs.saved');
-    Route::get('/jobs/{jobVacancy}', [JobController::class, 'show'])->name('jobs.show');
+    Route::get('/jobs/{jobVacancy}', [JobController::class, 'show'])->name('jobs.show')->withTrashed();
     Route::post('/jobs/{jobVacancy}/toggle-save', [JobController::class, 'toggleSave'])->name('jobs.toggle-save');
 
     // Applications

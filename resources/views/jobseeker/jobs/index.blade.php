@@ -85,7 +85,7 @@
                             <span class="text-muted">
                                 <i class="bi bi-calendar3 me-1"></i>
                                 @if($job->application_deadline)
-                                    Deadline: {{ $job->application_deadline->format('M d, Y') }}
+                                    Posting Closing Date: {{ $job->application_deadline->format('M d, Y') }}
                                 @else
                                     No deadline
                                 @endif

@@ -19,14 +19,38 @@
         </p>
     </div>
     <div class="d-flex gap-2">
-        <a href="{{ route('admin.job-vacancies.edit', $jobVacancy) }}" class="btn btn-primary">
-            <i class="bi bi-pencil me-1"></i> Edit
-        </a>
+        @unless($jobVacancy->trashed())
+            <a href="{{ route('admin.job-vacancies.edit', $jobVacancy) }}" class="btn btn-primary">
+                <i class="bi bi-pencil me-1"></i> Edit
+            </a>
+        @endunless
         <a href="{{ route('admin.job-vacancies.index') }}" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left me-1"></i> Back
         </a>
     </div>
 </div>
+
+@if($jobVacancy->trashed())
+    <div class="alert alert-warning border-0 shadow-sm d-flex align-items-center gap-2" role="alert">
+        <i class="bi bi-archive-fill fs-5"></i>
+        <div class="flex-grow-1">
+            <strong>This vacancy is archived.</strong>
+            <span class="d-block small">
+                Archived on {{ $jobVacancy->archived_at?->format('M d, Y g:i A') ?? 'N/A' }}. Restore it to make it editable and visible again.
+            </span>
+        </div>
+        <form action="{{ route('admin.job-vacancies.restore', $jobVacancy->id) }}" method="POST" class="confirm-form"
+              data-confirm-title="Restore this vacancy?"
+              data-confirm-text="The vacancy will be moved back to the active job vacancies list."
+              data-confirm-ok="Yes, restore it"
+              data-confirm-color="#198754">
+            @csrf
+            <button type="submit" class="btn btn-sm btn-success">
+                <i class="bi bi-arrow-counterclockwise me-1"></i> Restore
+            </button>
+        </form>
+    </div>
+@endif
 
 <div class="row g-4">
     <div class="col-lg-8">
@@ -111,7 +135,9 @@
                 <ul class="list-unstyled mb-0">
                     <li class="mb-3 d-flex justify-content-between">
                         <span class="text-muted">Status</span>
-                        @if($jobVacancy->is_open && $jobVacancy->is_active)
+                        @if($jobVacancy->trashed())
+                            <x-status-badge status="archived" label="Archived" />
+                        @elseif($jobVacancy->is_open && $jobVacancy->is_active)
                             <x-status-badge status="open" label="Open" />
                         @elseif(!$jobVacancy->is_open)
                             <x-status-badge status="closed" label="Closed" />
@@ -161,6 +187,28 @@
             <div class="card-body p-4">
                 <h5 class="fw-semibold mb-3"><i class="bi bi-gear me-2 text-primary"></i>Actions</h5>
                 <div class="d-grid gap-2">
+                    @if($jobVacancy->trashed())
+                        <form action="{{ route('admin.job-vacancies.restore', $jobVacancy->id) }}" method="POST" class="confirm-form"
+                              data-confirm-title="Restore this vacancy?"
+                              data-confirm-text="The vacancy will be moved back to the active job vacancies list."
+                              data-confirm-ok="Yes, restore it"
+                              data-confirm-color="#198754">
+                            @csrf
+                            <button type="submit" class="btn btn-success w-100">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i> Restore Vacancy
+                            </button>
+                        </form>
+                        <form action="{{ route('admin.job-vacancies.force-delete', $jobVacancy->id) }}" method="POST" class="confirm-form"
+                              data-confirm-title="Permanently delete this vacancy?"
+                              data-confirm-text="This removes the vacancy and its {{ $jobVacancy->applications->count() }} application(s) for good. This cannot be undone."
+                              data-confirm-ok="Yes, delete forever"
+                              data-confirm-color="#dc3545">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="btn btn-danger w-100">
+                                <i class="bi bi-trash me-1"></i> Permanently Delete
+                            </button>
+                        </form>
+                    @else
                     <form action="{{ route('admin.job-vacancies.toggle-status', $jobVacancy) }}" method="POST" class="confirm-form"
                           data-confirm-title="{{ $jobVacancy->is_open ? 'Close this vacancy?' : 'Reopen this vacancy?' }}"
                           data-confirm-text="{{ $jobVacancy->is_open ? 'Applicants will no longer be able to apply for this position.' : 'This vacancy will be reopened for applications.' }}"
@@ -174,10 +222,11 @@
                     </form>
                     <form action="{{ route('admin.job-vacancies.destroy', $jobVacancy) }}" method="POST" class="delete-form">
                         @csrf @method('DELETE')
-                        <button type="submit" class="btn btn-danger w-100">
-                            <i class="bi bi-trash me-1"></i> Delete Vacancy
+                        <button type="submit" class="btn btn-outline-danger w-100">
+                            <i class="bi bi-archive me-1"></i> Archive Vacancy
                         </button>
                     </form>
+                    @endif
                 </div>
             </div>
         </div>
@@ -190,13 +239,13 @@
 document.querySelector('.delete-form')?.addEventListener('submit', function(e) {
     e.preventDefault();
     Swal.fire({
-        title: 'Delete Vacancy?',
-        text: 'This action cannot be undone.',
+        title: 'Archive Vacancy?',
+        text: 'The vacancy will be moved to the archive, where you can restore or permanently delete it.',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#dc3545',
+        confirmButtonColor: '#d97706',
         cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Yes, delete it!'
+        confirmButtonText: 'Yes, archive it!'
     }).then(result => { if (result.isConfirmed) this.submit(); });
 });
 </script>

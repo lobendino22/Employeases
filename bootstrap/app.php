@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\ArchiveExpiredJobVacancies;
 use App\Http\Middleware\CheckRole;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -12,6 +13,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Sweep expired vacancies on every request so archiving no longer depends
+        // on the scheduler cron being configured or on an admin signing in.
+        $middleware->append(ArchiveExpiredJobVacancies::class);
+
         $middleware->alias([
             'role' => CheckRole::class,
         ]);

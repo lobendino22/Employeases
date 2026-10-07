@@ -15,6 +15,8 @@ class JobVacancyController extends Controller
 {
     public function index(Request $request)
     {
+        JobVacancy::archiveExpired();
+
         $query = JobVacancy::with(['category', 'user'])->latest();
 
         if ($request->filled('search')) {
@@ -33,11 +35,38 @@ class JobVacancyController extends Controller
                 $query->where('is_open', false);
             }
         }
+        if ($request->filled('deadline')) {
+            if ($request->deadline === 'closing_soon') {
+                $query->closingSoon();
+            } elseif ($request->deadline === 'no_deadline') {
+                $query->whereNull('application_deadline');
+            }
+        }
+
+        $vacancies = $query->paginate(10)->withQueryString();
+        $categories = JobCategory::where('is_active', true)->get();
+        $archivedCount = JobVacancy::archived()->count();
+
+        return view('admin.job-vacancies.index', compact('vacancies', 'categories', 'archivedCount'));
+    }
+
+    public function archived(Request $request)
+    {
+        JobVacancy::archiveExpired();
+
+        $query = JobVacancy::archived()->with(['category', 'user'])->latest('archived_at');
+
+        if ($request->filled('search')) {
+            $query->search($request->search);
+        }
+        if ($request->filled('category')) {
+            $query->byCategory($request->category);
+        }
 
         $vacancies = $query->paginate(10)->withQueryString();
         $categories = JobCategory::where('is_active', true)->get();
 
-        return view('admin.job-vacancies.index', compact('vacancies', 'categories'));
+        return view('admin.job-vacancies.archived', compact('vacancies', 'categories'));
     }
 
     public function create()
@@ -80,10 +109,34 @@ class JobVacancyController extends Controller
 
     public function destroy(JobVacancy $jobVacancy)
     {
+        // Soft delete: the vacancy is archived and can still be restored.
         $jobVacancy->delete();
 
         return redirect()->route('admin.job-vacancies.index')
-            ->with('success', 'Job vacancy deleted successfully.');
+            ->with('success', 'Job vacancy moved to the archive. You can restore it from the Archived page.');
+    }
+
+    public function restore(int $id)
+    {
+        $jobVacancy = JobVacancy::archived()->findOrFail($id);
+        $jobVacancy->restore();
+
+        if ($jobVacancy->hasExpiredDeadline()) {
+            return redirect()->route('admin.job-vacancies.edit', $jobVacancy)
+                ->with('info', 'Job vacancy restored, but its application deadline has already passed. Set a new deadline so it is not archived again.');
+        }
+
+        return redirect()->route('admin.job-vacancies.archived')
+            ->with('success', 'Job vacancy restored successfully.');
+    }
+
+    public function forceDelete(int $id)
+    {
+        $jobVacancy = JobVacancy::archived()->findOrFail($id);
+        $jobVacancy->forceDelete();
+
+        return redirect()->route('admin.job-vacancies.archived')
+            ->with('success', 'Job vacancy permanently deleted.');
     }
 
     public function toggleStatus(JobVacancy $jobVacancy)

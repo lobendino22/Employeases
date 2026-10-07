@@ -75,6 +75,107 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+/* ==========================================================================
+   LIVE FILTERING
+
+   Any form marked with class "live-filter" and a data-live-filter-target
+   pointing at a container id re-queries the server as the user types
+   (debounced) or changes a dropdown, then swaps the container's contents
+   with the fresh results — no Filter button, no full page reload.
+   ========================================================================== */
+
+function onReady(fn) {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', fn);
+    } else {
+        fn();
+    }
+}
+
+function initLiveFilter(form) {
+    const target = document.getElementById(form.dataset.liveFilterTarget || '');
+    if (!target) return;
+
+    let timer = null;
+    let controller = null;
+    let sequence = 0;
+
+    const buildUrl = () => {
+        const params = new URLSearchParams(new FormData(form));
+        params.delete('page'); // a new filter always restarts at page 1
+        [...params.keys()].forEach((key) => {
+            if (!String(params.get(key)).trim()) params.delete(key);
+        });
+        const query = params.toString();
+        return form.getAttribute('action') + (query ? `?${query}` : '');
+    };
+
+    const load = (url) => {
+        const id = ++sequence;
+        if (controller) controller.abort();
+        controller = new AbortController();
+        target.style.opacity = '0.45';
+
+        fetch(url, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest', Accept: 'text/html' },
+            credentials: 'same-origin',
+            signal: controller.signal,
+        })
+            .then((res) => (res.ok ? res.text() : Promise.reject(new Error(`HTTP ${res.status}`))))
+            .then((html) => {
+                if (id !== sequence) return; // a newer request already won
+                const doc = new DOMParser().parseFromString(html, 'text/html');
+                const fresh = doc.getElementById(target.id);
+                if (!fresh) return;
+                target.innerHTML = fresh.innerHTML;
+                history.replaceState(null, '', url);
+            })
+            .catch((error) => {
+                if (error?.name === 'AbortError') return;
+                console.error('Live filter failed:', error);
+            })
+            .finally(() => {
+                if (id === sequence) target.style.opacity = '';
+            });
+    };
+
+    const queue = () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => load(buildUrl()), 300);
+    };
+
+    const runNow = () => {
+        clearTimeout(timer);
+        load(buildUrl());
+    };
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        runNow();
+    });
+
+    form.querySelectorAll('input').forEach((input) => {
+        input.addEventListener('input', queue);
+    });
+
+    form.querySelectorAll('select').forEach((select) => {
+        select.addEventListener('change', runNow);
+    });
+
+    // Keep pagination inside the results working without reloading the page.
+    target.addEventListener('click', (e) => {
+        const link = e.target.closest('.pagination a');
+        if (!link || !target.contains(link)) return;
+        e.preventDefault();
+        clearTimeout(timer);
+        load(link.getAttribute('href'));
+    });
+}
+
+onReady(() => {
+    document.querySelectorAll('form.live-filter').forEach(initLiveFilter);
+});
+
 /* Delegated confirmation dialog for any <form class="confirm-form">.
    Configure via data-confirm-title / data-confirm-text / data-confirm-ok /
    data-confirm-color on the form element. */

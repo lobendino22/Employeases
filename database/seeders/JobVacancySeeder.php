@@ -106,6 +106,34 @@ class JobVacancySeeder extends Seeder
                 'application_deadline' => Carbon::now()->addDays(7),
             ],
             [
+                'job_category_id' => 5, // Government
+                'title' => 'Municipal Records Officer',
+                'description' => 'Maintain the municipal records system, process document requests, and ensure public records are filed and archived according to government retention rules.',
+                'requirements' => "- Bachelor's degree in Public Administration or related field\n- Experience with records management\n- Detail-oriented and organized\n- Computer literate",
+                'employment_type' => 'full_time',
+                'location' => 'Municipal Hall, Tagudin, Ilocos Sur',
+                'company' => 'Municipal Government of Tagudin',
+                'salary_min' => 16000,
+                'salary_max' => 21000,
+                'slots_available' => 1,
+                // Closing date has already passed so this posting is archived automatically.
+                'application_deadline' => Carbon::create(now()->year, 9, 27, 0, 0, 0),
+            ],
+            [
+                'job_category_id' => 8, // IT
+                'title' => 'IT Helpdesk Assistant',
+                'description' => 'Provide first-level technical support, log helpdesk tickets, and assist staff with hardware, software, and account issues.',
+                'requirements' => "- Associate or Bachelor's degree in IT or related field\n- Basic troubleshooting skills\n- Good customer service attitude\n- Fresh graduates are welcome to apply",
+                'employment_type' => 'full_time',
+                'location' => 'Tagudin, Ilocos Sur',
+                'company' => 'Tagudin Municipal Government',
+                'salary_min' => 13000,
+                'salary_max' => 17000,
+                'slots_available' => 2,
+                // Posted today and closes later, so it stays active.
+                'application_deadline' => Carbon::now()->addDays(30),
+            ],
+            [
                 'job_category_id' => 8, // IT
                 'title' => 'Computer Technician / IT Support',
                 'description' => 'Provide technical support for computer systems, networks, and office equipment. Maintain and troubleshoot hardware and software issues.',
@@ -121,7 +149,9 @@ class JobVacancySeeder extends Seeder
         ];
 
         foreach ($vacancies as $vacancy) {
-            JobVacancy::create([
+            JobVacancy::updateOrCreate([
+                'title' => $vacancy['title'],
+            ], [
                 'user_id' => $adminId,
                 'job_category_id' => $vacancy['job_category_id'],
                 'title' => $vacancy['title'],
