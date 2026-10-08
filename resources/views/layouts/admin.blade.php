@@ -85,6 +85,16 @@
                             <span>Interviews</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.notifications.index') }}" class="nav-link {{ request()->routeIs('admin.notifications.*') ? 'active' : '' }}">
+                            <i class="bi bi-bell-fill"></i>
+                            <span>Notifications</span>
+                            @php $unreadCount = \Illuminate\Support\Facades\Cache::remember('sidebar.admin.notifications', 60, fn () => auth()->user()->unreadNotifications()->count()); @endphp
+                            @if($unreadCount > 0)
+                                <span class="badge bg-brand-gold rounded-pill ms-auto">{{ $unreadCount }}</span>
+                            @endif
+                        </a>
+                    </li>
                     <li class="nav-section">
                         <span>Reports & Users</span>
                     </li>
@@ -115,8 +125,8 @@
         </aside>
 
         <!-- Main Content -->
-        <div class="main-content" id="mainContent">
-            <!-- Top Navbar -->
+        <div class="main-content" id="mainContent" style="padding-top: var(--header-height);">
+            <!-- Top Navbar (fixed) -->
             <nav class="main-header navbar navbar-expand navbar-light bg-white shadow-sm">
                 <div class="container-fluid">
                     <button class="btn btn-link text-dark sidebar-toggle me-2" id="sidebarToggle" type="button">
@@ -124,79 +134,6 @@
                     </button>
 
                     <div class="d-flex align-items-center gap-3 ms-auto">
-                        <!-- Notifications -->
-                        <div class="dropdown">
-                            <button class="btn btn-link position-relative notification-bell p-2" type="button" data-bs-toggle="dropdown" id="notificationDropdown" aria-expanded="false">
-                                <i class="bi bi-bell fs-5"></i>
-                                @php
-                                    $unreadCount = 5; // This would come from your notification model
-                                @endphp
-                                @if($unreadCount > 0)
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill notification-badge bg-danger" style="font-size:10px;">
-                                        {{ $unreadCount > 9 ? '9+' : $unreadCount }}
-                                    </span>
-                                @endif
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end shadow notification-dropdown" aria-labelledby="notificationDropdown">
-                                <div class="dropdown-header d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
-                                    <h6 class="mb-0 fw-semibold">Notifications</h6>
-                                    @if($unreadCount > 0)
-                                        <button class="btn btn-sm btn-link text-decoration-none p-0 mark-all-read text-primary" type="button" style="font-size: 0.75rem;">
-                                            Mark all read
-                                        </button>
-                                    @endif
-                                </div>
-                                <div class="notification-list" style="max-height:350px;overflow-y:auto;">
-                                    {{-- Sample notifications - replace with actual data --}}
-                                    <a href="#" class="dropdown-item notification-item unread py-2 px-3">
-                                        <div class="d-flex gap-3">
-                                            <div class="notification-icon flex-shrink-0">
-                                                <div class="rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
-                                                    <i class="bi bi-calendar-check fs-6"></i>
-                                                </div>
-                                            </div>
-                                            <div class="flex-grow-1 min-w-0">
-                                                <p class="mb-1 fw-semibold small text-dark">Interview Scheduled</p>
-                                                <p class="mb-1 text-muted small">An interview has been scheduled for "Elementary School Teacher (Contractual)"</p>
-                                                <small class="text-muted" style="font-size: 0.7rem;">October 07, 2026 11:00 AM</small>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="dropdown-item notification-item py-2 px-3">
-                                        <div class="d-flex gap-3">
-                                            <div class="notification-icon flex-shrink-0">
-                                                <div class="rounded-circle bg-success-subtle text-success d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
-                                                    <i class="bi bi-person-check fs-6"></i>
-                                                </div>
-                                            </div>
-                                            <div class="flex-grow-1 min-w-0">
-                                                <p class="mb-1 fw-semibold small text-dark">Application Status Updated</p>
-                                                <p class="mb-1 text-muted small">Application status changed for "Elementary School Teacher"</p>
-                                                <small class="text-muted" style="font-size: 0.7rem;">October 07, 2026 11:05 AM</small>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="dropdown-item notification-item py-2 px-3">
-                                        <div class="d-flex gap-3">
-                                            <div class="notification-icon flex-shrink-0">
-                                                <div class="rounded-circle bg-info-subtle text-info d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
-                                                    <i class="bi bi-file-text fs-6"></i>
-                                                </div>
-                                            </div>
-                                            <div class="flex-grow-1 min-w-0">
-                                                <p class="mb-1 fw-semibold small text-dark">Application Status Updated</p>
-                                                <p class="mb-1 text-muted small">Application reviewed for "Elementary School Teacher"</p>
-                                                <small class="text-muted" style="font-size: 0.7rem;">October 07, 2026 10:30 AM</small>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="dropdown-footer text-center border-top pt-2 mt-2">
-                                    <a href="#" class="btn btn-sm btn-link text-decoration-none">View all notifications</a>
-                                </div>
-                            </div>
-                        </div>
-
                         <!-- Dark Mode Toggle -->
                         <button class="btn btn-link text-dark position-relative p-2" id="darkModeToggle" type="button">
                             <i class="bi bi-moon-fill" id="darkModeIcon"></i>

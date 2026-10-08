@@ -30,7 +30,7 @@
                 <p class="text-muted small mb-0">Member since {{ $user->created_at->format('M d, Y') }}</p>
 
                 <a href="{{ route('jobseeker.profile.edit') }}" class="btn btn-outline-primary btn-sm mt-3">
-                    <i class="bi bi-camera me-1"></i> Update Photo
+                    <i class="bi bi-camera me-1"></i> Update Profile/Photo
                 </a>
             </div>
         </div>

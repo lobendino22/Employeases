@@ -70,28 +70,28 @@
                     <tbody>
                         @foreach($vacancies as $vacancy)
                             <tr>
-                                <td>
+                                <td data-label="Title">
                                     <a href="{{ route('admin.job-vacancies.show', $vacancy) }}" class="text-decoration-none fw-medium">
                                         {{ $vacancy->title }}
                                     </a>
                                     <div class="small text-muted"><i class="bi bi-geo-alt me-1"></i>{{ $vacancy->location }}</div>
                                 </td>
-                                <td><span class="badge bg-light text-dark">{{ $vacancy->category?->name ?? 'N/A' }}</span></td>
-                                <td><span class="badge bg-primary-subtle text-primary-emphasis">{{ $vacancy->employment_type_label }}</span></td>
-                                <td class="small">
+                                <td data-label="Category"><span class="badge bg-light text-dark">{{ $vacancy->category?->name ?? 'N/A' }}</span></td>
+                                <td data-label="Type"><span class="badge bg-primary-subtle text-primary-emphasis">{{ $vacancy->employment_type_label }}</span></td>
+                                <td data-label="Deadline" class="small">
                                     @if($vacancy->application_deadline)
                                         {{ $vacancy->application_deadline->format('M d, Y') }}
                                     @else
                                         <span class="text-muted">No deadline</span>
                                     @endif
                                 </td>
-                                <td class="small">{{ $vacancy->archived_at?->format('M d, Y g:i A') ?? 'N/A' }}</td>
-                                <td>
+                                <td data-label="Archived On" class="small">{{ $vacancy->archived_at?->format('M d, Y g:i A') ?? 'N/A' }}</td>
+                                <td data-label="Applicants">
                                     <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill">
                                         {{ $vacancy->applicants_count }}
                                     </span>
                                 </td>
-                                <td>
+                                <td data-label="Actions">
                                     <div class="d-flex gap-1">
                                         <a href="{{ route('admin.job-vacancies.show', $vacancy) }}" class="btn btn-sm btn-outline-secondary" title="View">
                                             <i class="bi bi-eye"></i>

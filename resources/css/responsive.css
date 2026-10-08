@@ -425,7 +425,7 @@ img {
 
     .table tbody td {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
         align-items: center;
         text-align: left !important;
         padding: 0.5rem 0;

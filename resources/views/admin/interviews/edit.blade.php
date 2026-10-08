@@ -27,10 +27,16 @@
             <div class="row g-3">
                 <div class="col-md-6">
                     <label class="form-label fw-medium">Interview Date & Time <span class="text-danger">*</span></label>
-                    <input type="datetime-local" name="scheduled_at" class="form-control @error('scheduled_at') is-invalid @enderror"
-                           value="{{ old('scheduled_at', $interview->scheduled_at->format('Y-m-d\TH:i')) }}"
-                           min="{{ now()->format('Y-m-d\TH:i') }}">
-                    @error('scheduled_at') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    <div class="input-group">
+                        <input type="datetime-local" name="scheduled_at" id="scheduled_at" class="form-control @error('scheduled_at') is-invalid @enderror"
+                               value="{{ old('scheduled_at', $interview->scheduled_at->format('Y-m-d\TH:i')) }}"
+                               min="{{ now()->format('Y-m-d\TH:i') }}">
+                        <button type="button" id="saveDateTimeBtn" class="btn btn-success">
+                            <i class="bi bi-save me-1"></i> Save
+                        </button>
+                    </div>
+                    @error('scheduled_at') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                    <span id="saveDateTimeStatus" class="text-muted small" style="display:none;"></span>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label fw-medium">Interview Type <span class="text-danger">*</span></label>
@@ -60,3 +66,59 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.getElementById('saveDateTimeBtn')?.addEventListener('click', function() {
+    const btn = this;
+    const input = document.getElementById('scheduled_at');
+    const statusSpan = document.getElementById('saveDateTimeStatus');
+    const dateTime = input.value;
+
+    if (!dateTime) {
+        statusSpan.textContent = 'Please select a date and time first.';
+        statusSpan.className = 'text-danger small';
+        statusSpan.style.display = 'block';
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Saving...';
+    statusSpan.textContent = '';
+
+    fetch('{{ route("admin.interviews.save-datetime", $interview) }}', {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ scheduled_at: dateTime })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            statusSpan.textContent = 'Saved!';
+            statusSpan.className = 'text-success small';
+            btn.innerHTML = '<i class="bi bi-check-circle me-1"></i> Saved';
+            setTimeout(() => {
+                btn.innerHTML = '<i class="bi bi-save me-1"></i> Save';
+                btn.disabled = false;
+                statusSpan.style.display = 'none';
+            }, 2000);
+        } else {
+            statusSpan.textContent = data.message || 'Failed to save.';
+            statusSpan.className = 'text-danger small';
+            btn.innerHTML = '<i class="bi bi-save me-1"></i> Save';
+            btn.disabled = false;
+        }
+    })
+    .catch(() => {
+        statusSpan.textContent = 'Connection error. Could not save date & time.';
+        statusSpan.className = 'text-danger small';
+        btn.innerHTML = '<i class="bi bi-save me-1"></i> Save';
+        btn.disabled = false;
+    });
+});
+</script>
+@endpush

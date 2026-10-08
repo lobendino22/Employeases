@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\ApplicantController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\InterviewController as AdminInterviewController;
 use App\Http\Controllers\Admin\JobVacancyController as AdminJobVacancyController;
+use App\Http\Controllers\Admin\NotificationController as AdminNotificationController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\JobSeeker\ApplicationController;
@@ -60,8 +61,15 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::get('/interviews/{interview}', [AdminInterviewController::class, 'show'])->name('interviews.show');
     Route::get('/interviews/{interview}/edit', [AdminInterviewController::class, 'edit'])->name('interviews.edit');
     Route::put('/interviews/{interview}', [AdminInterviewController::class, 'update'])->name('interviews.update');
+    Route::post('/interviews/{interview}/save-datetime', [AdminInterviewController::class, 'saveDateTime'])->name('interviews.save-datetime');
     Route::post('/interviews/{interview}/status', [AdminInterviewController::class, 'updateStatus'])->name('interviews.update-status');
     Route::delete('/interviews/{interview}', [AdminInterviewController::class, 'destroy'])->name('interviews.destroy');
+
+    // Notifications
+    Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{notification}/read', [AdminNotificationController::class, 'markAsRead'])->name('notifications.mark-read');
+    Route::post('/notifications/mark-all-read', [AdminNotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
+    Route::get('/notifications/unread-count', [AdminNotificationController::class, 'getUnreadCount'])->name('notifications.unread-count');
 
     // Reports
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');

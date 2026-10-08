@@ -112,8 +112,8 @@
         </aside>
 
         <!-- Main Content -->
-        <div class="main-content" id="mainContent">
-            <!-- Top Navbar -->
+        <div class="main-content" id="mainContent" style="padding-top: var(--header-height);">
+            <!-- Top Navbar (fixed) -->
             <nav class="main-header navbar navbar-expand navbar-light bg-white shadow-sm">
                 <div class="container-fluid">
                     <button class="btn btn-link text-dark sidebar-toggle me-2" id="sidebarToggle" type="button">
@@ -121,55 +121,6 @@
                     </button>
 
                     <div class="d-flex align-items-center gap-3 ms-auto">
-                        <!-- Notifications -->
-                        <div class="dropdown">
-                            <button class="btn btn-link position-relative notification-bell" type="button" data-bs-toggle="dropdown" id="notificationDropdown">
-                                <i class="bi bi-bell fs-5"></i>
-                                @if($unreadCount > 0)
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill notification-badge" style="font-size:10px">
-                                        {{ $unreadCount > 9 ? '9+' : $unreadCount }}
-                                    </span>
-                                @endif
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end shadow notification-dropdown" aria-labelledby="notificationDropdown">
-                                <div class="dropdown-header d-flex justify-content-between align-items-center">
-                                    <strong>Notifications</strong>
-                                    @if($unreadCount > 0)
-                                        <button class="btn btn-sm btn-link text-decoration-none p-0 mark-all-read" type="button">
-                                            Mark all read
-                                        </button>
-                                    @endif
-                                </div>
-                                <div class="notification-list" style="max-height:300px;overflow-y:auto">
-                                    @forelse(auth()->user()->notifications()->latest()->take(5)->get() as $notification)
-                                        <a href="{{ $notification->action_url ?? '#' }}" class="dropdown-item notification-item {{ !$notification->is_read ? 'unread' : '' }}">
-                                            <div class="d-flex gap-2">
-                                                <div class="notification-icon">
-                                                    <i class="bi {{ $notification->icon }} text-{{ $notification->color }}"></i>
-                                                </div>
-                                                <div class="flex-grow-1 min-w-0">
-                                                    <p class="mb-0 fw-semibold small">{{ $notification->title }}</p>
-                                                    <small class="text-muted">{{ Str::limit($notification->message, 50) }}</small>
-                                                    <br>
-                                                    <small class="text-muted">{{ $notification->created_at->diffForHumans() }}</small>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    @empty
-                                        <div class="text-center py-4 text-muted">
-                                            <i class="bi bi-bell-slash fs-3 d-block mb-2"></i>
-                                            <small>No notifications yet</small>
-                                        </div>
-                                    @endforelse
-                                </div>
-                                @if(auth()->user()->notifications()->count() > 0)
-                                    <div class="dropdown-footer text-center border-top">
-                                        <a href="{{ route('jobseeker.notifications.index') }}" class="btn btn-sm btn-link text-decoration-none">View all notifications</a>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-
                         <!-- Dark Mode Toggle -->
                         <button class="btn btn-link text-dark position-relative" id="darkModeToggle" type="button">
                             <i class="bi bi-moon-fill" id="darkModeIcon"></i>
@@ -302,29 +253,6 @@
                 });
             }
 
-            // Mark all notifications as read
-            const markAllBtn = document.querySelector('.mark-all-read');
-            if (markAllBtn) {
-                markAllBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    fetch('{{ route("jobseeker.notifications.mark-all-read") }}', {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                            'Accept': 'application/json',
-                        }
-                    }).then(r => r.json()).then(data => {
-                        if (data.success) {
-                            document.querySelectorAll('.notification-item.unread').forEach(el => {
-                                el.classList.remove('unread');
-                            });
-                            document.querySelectorAll('.notification-badge').forEach(el => {
-                                el.remove();
-                            });
-                        }
-                    });
-                });
-            }
         });
     </script>
 </body>

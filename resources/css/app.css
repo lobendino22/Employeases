@@ -157,10 +157,104 @@ body {
     overflow-x: hidden;
 }
 
-/* ===== WRAPPER ===== */
-.wrapper {
-    display: flex;
-    min-height: 100vh;
+/* ===== FIXED NAVIGATION BAR =====
+   Uses position: fixed so the navbar stays visible at the top of the
+   viewport even when the user scrolls down. */
+.navbar-fixed-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+    /* Standard Bootstrap navbar spacing preserved */
+}
+
+/* ==========================================================================
+   EMPLOYEASE DESIGN SYSTEM
+   Shared tokens, components and states used across every internal page.
+   ========================================================================== */
+
+:root {
+    --ds-radius-card: .9rem;
+    --ds-radius-lg: .75rem;
+    --ds-shadow-card: 0 1px 2px rgba(10, 37, 64, .05), 0 8px 24px rgba(10, 37, 64, .06);
+    --ds-shadow-soft: 0 1px 2px rgba(10, 37, 64, .04), 0 6px 18px rgba(10, 37, 64, .05);
+    --ds-border: rgba(10, 37, 64, .08);
+    --ds-heading: #0A2540;
+    --ds-body: #475569;
+    --ds-muted: #94a3b8;
+    --ds-amber-bg: #FEF3C7;  --ds-amber-fg: #92400E;
+    --ds-blue-bg: #DBEAFE;   --ds-blue-fg: #1E40AF;
+    --ds-green-bg: #DCFCE7;  --ds-green-fg: #15803D;
+    --ds-red-bg: #FEE2E2;    --ds-red-fg: #B91C1C;
+    --ds-violet-bg: #EDE9FE; --ds-violet-fg: #5B21B6;
+    --ds-slate-bg: #F1F5F9;  --ds-slate-fg: #475569;
+}
+
+/* ===== TYPOGRAPHY — one pairing: Inter, bold navy headings ===== */
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6,
+.card-title {
+    color: var(--ds-heading);
+    letter-spacing: -.01em;
+}
+
+/* ===== CARDS — consistent radius + soft shadow ===== */
+.card {
+    border-radius: var(--ds-radius-card);
+    box-shadow: var(--ds-shadow-card);
+}
+
+.card-header {
+    border-top-left-radius: var(--ds-radius-card) !important;
+    border-top-right-radius: var(--ds-radius-card) !important;
+}
+
+/* ===== FOCUS STATES — visible on every control ===== */
+.btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(227, 160, 8, .35);
+}
+
+.btn:focus:not(:focus-visible) {
+    box-shadow: none;
+}
+
+a:focus-visible {
+    outline: 2px solid rgba(201, 151, 0, .6);
+    outline-offset: 2px;
+}
+
+/* ===== BREADCRUMBS ===== */
+.breadcrumb-app {
+    font-size: .8rem;
+    margin: 0;
+}
+
+.breadcrumb-app .breadcrumb-item {
+    display: inline-flex;
+    align-items: center;
+    color: var(--ds-muted);
+}
+
+.breadcrumb-app .breadcrumb-item + .breadcrumb-item::before {
+    content: '\\203A';
+    color: #cbd5e1;
+}
+
+.breadcrumb-app .breadcrumb-item a {
+    color: var(--ds-body);
+    text-decoration: none;
+    transition: color .15s ease;
+}
+
+.breadcrumb-app .breadcrumb-item a:hover {
+    color: var(--brand-gold-dark);
+}
+
+.breadcrumb-app .breadcrumb-item.active {
+    color: var(--brand-navy);
+    font-weight: 600;
 }
 
 .main-content {
@@ -291,13 +385,32 @@ body {
 
 /* ===== HEADER ===== */
 .main-header {
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: var(--sidebar-width);
+    right: 0;
     z-index: 1020;
     min-height: var(--header-height);
     border-bottom: 2px solid rgba(227, 160, 8, .3);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+    transition: left 0.3s ease;
+}
+
+/* When sidebar is collapsed on desktop */
+@media (min-width: 768px) {
+    .main-sidebar.collapsed ~ .main-content .main-header,
+    .main-sidebar.collapsed + .main-content .main-header {
+        left: 0;
+    }
+}
+
+/* Mobile: header spans full width */
+@media (max-width: 767.98px) {
+    .main-header {
+        left: 0;
+        right: 0;
+    }
 }
 
 .sidebar-toggle {
@@ -478,13 +591,24 @@ body {
 }
 
 /* ===== NOTIFICATION DROPDOWN ===== */
+/* Ensure parent dropdown container is positioned relative */
+.main-header .dropdown {
+    position: relative;
+}
+
 .notification-dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    margin-top: 8px;
     width: 380px;
+    max-width: calc(100vw - 2rem);
     border: none;
     border-radius: 12px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
     padding: 0;
     overflow: hidden;
+    z-index: 1050;
 }
 
 /* Notification bell — navy base, gold on hover (brand accent) */

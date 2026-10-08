@@ -269,8 +269,8 @@
                             <tbody>
                                 @foreach($vacanciesByCategory as $cat)
                                     <tr>
-                                        <td>{{ $cat->name }}</td>
-                                        <td class="text-end fw-semibold">{{ $cat->job_vacancies_count }}</td>
+                                        <td data-label="Category">{{ $cat->name }}</td>
+                                        <td data-label="Count" class="text-end fw-semibold">{{ $cat->job_vacancies_count }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -305,8 +305,8 @@
                             <tbody>
                                 @foreach($applicationsByStatus as $stat)
                                     <tr>
-                                        <td><x-status-badge :status="$stat->status" /></td>
-                                        <td class="text-end fw-semibold">{{ $stat->total }}</td>
+                                        <td data-label="Status"><x-status-badge :status="$stat->status" /></td>
+                                        <td data-label="Count" class="text-end fw-semibold">{{ $stat->total }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -349,7 +349,7 @@
                                 $avatarColor = $avatarPalette[crc32($app->user->name) % count($avatarPalette)];
                             @endphp
                             <tr>
-                                <td class="ps-3">
+                                <td data-label="Applicant" class="ps-3">
                                     <div class="d-flex align-items-center gap-2">
                                         <div class="rpt-avatar" style="background: {{ $avatarColor }}">
                                             {{ strtoupper(substr($app->user->name, 0, 1)) }}
@@ -357,9 +357,9 @@
                                         <span>{{ $app->user->name }}</span>
                                     </div>
                                 </td>
-                                <td>{{ $app->jobVacancy->title }}</td>
-                                <td class="text-muted">{{ $app->created_at->format('M d, Y') }}</td>
-                                <td class="pe-3"><span class="badge bg-{{ $app->status_color }}">{{ $app->status_label }}</span></td>
+                                <td data-label="Position">{{ $app->jobVacancy->title }}</td>
+                                <td data-label="Date" class="text-muted">{{ $app->created_at->format('M d, Y') }}</td>
+                                <td data-label="Status" class="pe-3"><span class="badge bg-{{ $app->status_color }}">{{ $app->status_label }}</span></td>
                             </tr>
                         @endforeach
                     </tbody>
